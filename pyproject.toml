@@ -1,0 +1,17 @@
+[project]
+name = "remitly-2025-intern"
+version = "0.1.0"
+description = "Pure for internship task"
+authors = [
+    {name = "Bartłomiej Kruczek",email = "bkruczekk@student.agh.edu.pl"}
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pytest (>=8.3.5,<9.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
