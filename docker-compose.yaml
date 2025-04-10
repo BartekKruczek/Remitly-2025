@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+  db:
+    image: postgres:14
+    container_name: remitly_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+
+  api:
+    build: .
+    container_name: remitly_api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql://postgres:password@db:5432/mydb
+
+  # TODO add tests service
