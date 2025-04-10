@@ -8,8 +8,9 @@ RUN pip install --no-cache-dir poetry
 # copy poetry files
 COPY pyproject.toml poetry.lock ./
 
-# here we prevent from creating .venv and install dependencies directly in the container
-RUN poetry config virtualenvs.create false \
+COPY /data/Interns_2025_SWIFT_CODES.xlsx ./
+
+RUN poetry config virtualenvs.create true \
     && poetry install --no-root --no-interaction --no-ansi
 
 COPY . .
