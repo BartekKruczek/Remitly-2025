@@ -15,6 +15,6 @@ RUN poetry config virtualenvs.create true \
 
 COPY . .
 
-CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["poetry", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8080", "--lifespan=on"]
 
 # TODO here testing in the future
