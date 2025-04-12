@@ -1,22 +1,14 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from pydantic import BaseModel
 
 from .db import engine, yield_db
-from .model import Base
+from .model import Base, UserSwiftDB
 from .fetch_xlsx import parse_and_load_xlsx
 from .crud import get_unique_swift_code
+from .pydantic_structure import SwiftCodeResponse, SwiftCodeRecord, CountrySwiftCodesResponse
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
-
-class SwiftCodeResponse(BaseModel):
-    swiftCode: str
-    bankName: str
-    address: str
-    countryISO2: str
-    countryName: str
-    isHeadquarter: bool
 
 @app.on_event("startup")
 def startup():
@@ -41,6 +33,29 @@ def read_swift_code(swift_code: str, db: Session = Depends(yield_db)):
         countryISO2=record.country_iso2,
         countryName=record.country_name,
         isHeadquarter=record.is_headquarter
+    )
+
+@app.get("/v1/swift-codes/country/{countryISO2code}")
+def read_swift_codes_by_country(countryISO2code: str, db: Session = Depends(yield_db)):
+    records = db.query(UserSwiftDB).filter(UserSwiftDB.country_iso2 == countryISO2code.upper()).all()
+    if not records:
+        raise HTTPException(status_code=404, detail="No SWIFT codes found for this country")
+    
+    country_name = records[0].country_name.upper()
+    swift_codes = [
+        SwiftCodeRecord(
+            swiftCode=record.swift_code,
+            bankName=record.bank_name,
+            address=record.address,
+            countryISO2=record.country_iso2,
+            isHeadquarter=record.is_headquarter
+        )
+        for record in records
+    ]
+    return CountrySwiftCodesResponse(
+        countryISO2=countryISO2code.upper(),
+        countryName=country_name,
+        swiftCodes=swift_codes
     )
 
 @app.delete("/v1/swift-codes/{swift_code}")
