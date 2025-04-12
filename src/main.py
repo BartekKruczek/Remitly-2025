@@ -21,6 +21,7 @@ def startup():
 
     # TODO : add check if db is empty, if not then load data
 
+# TODO: fix for branches
 @app.get("/v1/swift-codes/{swift_code}")
 def read_swift_code(swift_code: str, db: Session = Depends(yield_db)):
     record = get_unique_swift_code(db, swift_code)
@@ -57,6 +58,8 @@ def read_swift_codes_by_country(countryISO2code: str, db: Session = Depends(yiel
         countryName=country_name,
         swiftCodes=swift_codes
     )
+
+# TODO: add POST method
 
 @app.delete("/v1/swift-codes/{swift_code}")
 def delete_swift_code(swift_code: str, db: Session = Depends(yield_db)):

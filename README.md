@@ -15,9 +15,10 @@ TODO: describe how it works, all endpoints, how to use them, etc. Also how conta
 add some diagrams.
 
 ## Implemented endpoints
-There are4 in total FASTAPI endpoints:
-- **GET**: /v1/swift-codes/{swift_code} - returns information about the swift code
-- **DELETE**: /v1/swift-codes/{swift_code} - deletes information about the swift code. Note: you have to pass `-X DELETE` flag
+There are 4 in total FastAPI endpoints:
+- **/v1/swift-codes/{swift_code}** (GET) - returns information about the swift code
+- **/v1/swift-codes/country/{countryISO2code}** (GET) - returns all information about the swift codes for the given country ISO2 code
+- **/v1/swift-codes/{swift_code}** (DELETE) - deletes information about the swift code. Note: you have to pass `-X DELETE` flag
 
 ## How to extract information from DB
 It is recommended to use command line interface (CLI) to extract information. Please, consider following example command:
