@@ -14,21 +14,20 @@ containerized app, poetry is used to manage dependencies. What is more, they are
 TODO: describe how it works, all endpoints, how to use them, etc. Also how containerized app is connected to the database. Maybe
 add some diagrams.
 
+## Implemented endpoints
+There are4 in total FASTAPI endpoints:
+- **GET**: /v1/swift-codes/{swift_code} - returns information about the swift code
+- **DELETE**: /v1/swift-codes/{swift_code} - deletes information about the swift code. Note: you have to pass `-X DELETE` flag
+
 ## How to extract information from DB
-It is recommended to use command line interface or browser to extract information. You can follow a few options.
-- CLI
+It is recommended to use command line interface (CLI) to extract information. Please, consider following example command:
 ```bash
 curl http://localhost:8080/v1/swift-codes/KCCPPLPW1AM
 ```
 
-You can also follow these command with flag `-o` to save the output to a file, i.e.: `-o swift_code.json`. It will create a file with the name `swift_code.json` in the current directory.
-
-- Browser
-
-Simply connect to the localhost:8080 following by v1/swift-codes/{swift_code} and you will be able to see extracted information, i.e.:
-```bash
-http://localhost:8080/v1/swift-codes/KCCPPLPW1AM
-```
+You can also follow these command with flag various additional flags. For now, few have been tested:
+- `-o` to save the output to a file, i.e.: `-o swift_code.json`. It will create a file with the name `swift_code.json` in the current directory.
+- `-X DELETE` to delete the swift code from the database. It will remove the swift code from the database and return a success message. Without it, the code will execute a GET request.
 
 ## PostgreSQL
 Database itself is running on port 5432. You can connect with it using PostgreSQL client or CLI. Credentials are:
@@ -50,3 +49,6 @@ SELECT * FROM swift_db LIMIT 10;
 
 ## How to run tests
 TODO: describe how to run tests
+
+## Clean up
+For the safety reasons, there is no implemented any automatic clean up command. In order to stop the application, and thus the database, user should do it manually. To recreate whole environment/experiments, previously created containers should be removed, which also kills the database.

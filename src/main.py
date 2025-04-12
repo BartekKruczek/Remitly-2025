@@ -43,6 +43,11 @@ def read_swift_code(swift_code: str, db: Session = Depends(yield_db)):
         isHeadquarter=record.is_headquarter
     )
 
-@app.get("/")
-def home():
-    return {"status": "ok", "message": "Hello from Docker + FastAPI!"}
+@app.delete("/v1/swift-codes/{swift_code}")
+def delete_swift_code(swift_code: str, db: Session = Depends(yield_db)):
+    record = get_unique_swift_code(db, swift_code)
+    if not record:
+        raise HTTPException(status_code=404, detail="SWIFT code not found")
+    db.delete(record)
+    db.commit()
+    return {"message": f"Data associated with SWIFT code {swift_code} deleted successfully."}
