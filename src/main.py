@@ -4,8 +4,8 @@ from sqlalchemy.orm import Session
 from .db import engine, yield_db
 from .model import Base, UserSwiftDB
 from .fetch_xlsx import parse_and_load_xlsx
-from .crud import get_unique_swift_code
-from .pydantic_structure import SwiftCodeResponse, SwiftCodeRecord, CountrySwiftCodesResponse
+from .crud import get_unique_swift_code, create_swift_code
+from .pydantic_structure import SwiftCodeResponse, SwiftCodeRecord, CountrySwiftCodesResponse, CreateNewData
 
 app = FastAPI()
 Base.metadata.create_all(bind=engine)
@@ -59,7 +59,12 @@ def read_swift_codes_by_country(countryISO2code: str, db: Session = Depends(yiel
         swiftCodes=swift_codes
     )
 
-# TODO: add POST method
+@app.post("/v1/swift-codes", response_model=dict)
+def create_swift_code_endpoint(payload: CreateNewData, db: Session = Depends(yield_db)):
+    if get_unique_swift_code(db, payload.swift_code):
+        raise HTTPException(status_code=400, detail="SWIFT code already exists")
+    new_data = create_swift_code(db, payload.dict())
+    return {"message": f"Record with swift code {new_data.swift_code} created successfully."}
 
 @app.delete("/v1/swift-codes/{swift_code}")
 def delete_swift_code(swift_code: str, db: Session = Depends(yield_db)):

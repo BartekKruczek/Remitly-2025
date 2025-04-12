@@ -20,3 +20,11 @@ class CountrySwiftCodesResponse(BaseModel):
     countryISO2: str
     countryName: str
     swiftCodes: List[SwiftCodeRecord]
+
+class CreateNewData(BaseModel):
+    swift_code: str
+    bank_name: str
+    address: str
+    country_iso2: str
+    country_name: str
+    is_headquarter: bool

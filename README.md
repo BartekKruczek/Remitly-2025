@@ -18,6 +18,19 @@ add some diagrams.
 There are 4 in total FastAPI endpoints:
 - **/v1/swift-codes/{swift_code}** (GET) - returns information about the swift code
 - **/v1/swift-codes/country/{countryISO2code}** (GET) - returns all information about the swift codes for the given country ISO2 code
+- **/v1/swift-codes** (POST) - creates a new data structure in database. It requires a JSON body passed in the request. Example CLI command:
+```
+curl -X POST http://localhost:8080/v1/swift-codes \
+  -H "Content-Type: application/json" \
+  -d '{
+    "swift_code": "NEWCODE123XXX",
+    "bank_name": "New Bank",
+    "address": "Nowy Adres 1, Miasto",
+    "country_iso2": "PL",
+    "country_name": "POLAND",
+    "is_headquarter": true
+}'
+```
 - **/v1/swift-codes/{swift_code}** (DELETE) - deletes information about the swift code. Note: you have to pass `-X DELETE` flag
 
 ## How to extract information from DB
