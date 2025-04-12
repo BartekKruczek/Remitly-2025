@@ -12,7 +12,8 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # define db
 def yield_db():
+    db = SessionLocal()
     try:
-        yield SessionLocal()
+        yield db
     finally:
-        SessionLocal.close()
+        db.close()
