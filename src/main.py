@@ -21,19 +21,37 @@ def startup():
 
     # TODO : add check if db is empty, if not then load data
 
-# TODO: fix for branches
 @app.get("/v1/swift-codes/{swift_code}")
 def read_swift_code(swift_code: str, db: Session = Depends(yield_db)):
     record = get_unique_swift_code(db, swift_code)
     if not record:
         raise HTTPException(status_code=404, detail="SWIFT code not found")
+    
+    branches = []
+    if record.is_headquarter:
+        prefix = record.swift_code[:8]
+        branches_query = db.query(UserSwiftDB).filter(
+            UserSwiftDB.swift_code.like(prefix + '%'),
+            UserSwiftDB.swift_code != record.swift_code
+        ).all()
+        branches = [
+            SwiftCodeRecord(
+                swiftCode=branch.swift_code,
+                bankName=branch.bank_name,
+                address=branch.address,
+                countryISO2=branch.country_iso2,
+                isHeadquarter=branch.is_headquarter
+            )
+            for branch in branches_query
+        ]
     return SwiftCodeResponse(
         swiftCode=record.swift_code,
         bankName=record.bank_name,
         address=record.address,
         countryISO2=record.country_iso2,
         countryName=record.country_name,
-        isHeadquarter=record.is_headquarter
+        isHeadquarter=record.is_headquarter,
+        branches=branches
     )
 
 @app.get("/v1/swift-codes/country/{countryISO2code}")

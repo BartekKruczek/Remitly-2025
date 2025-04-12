@@ -1,5 +1,12 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List
+
+class SwiftCodeRecord(BaseModel):
+    swiftCode: str
+    bankName: str
+    address: str
+    countryISO2: str
+    isHeadquarter: bool
 
 class SwiftCodeResponse(BaseModel):
     swiftCode: str
@@ -8,13 +15,7 @@ class SwiftCodeResponse(BaseModel):
     countryISO2: str
     countryName: str
     isHeadquarter: bool
-
-class SwiftCodeRecord(BaseModel):
-    swiftCode: str
-    bankName: str
-    address: str
-    countryISO2: str
-    isHeadquarter: bool
+    branches: List[SwiftCodeRecord] = Field(default_factory=list)
 
 class CountrySwiftCodesResponse(BaseModel):
     countryISO2: str

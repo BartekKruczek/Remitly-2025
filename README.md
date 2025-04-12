@@ -3,7 +3,7 @@ Repository for Remitly 2025 Internship task
 
 ## How to build the project
 It is highly recommended to use docker application for this launch. In order to make it running, please consider using following command:
-```bash
+```
 docker compose up --build
 ```
 
@@ -35,13 +35,18 @@ curl -X POST http://localhost:8080/v1/swift-codes \
 
 ## How to extract information from DB
 It is recommended to use command line interface (CLI) to extract information. Please, consider following example command:
-```bash
+```
 curl http://localhost:8080/v1/swift-codes/KCCPPLPW1AM
 ```
 
 You can also follow these command with flag various additional flags. For now, few have been tested:
 - `-o` to save the output to a file, i.e.: `-o swift_code.json`. It will create a file with the name `swift_code.json` in the current directory.
 - `-X DELETE` to delete the swift code from the database. It will remove the swift code from the database and return a success message. Without it, the code will execute a GET request.
+- `-d` to pass a JSON body in the request. It is used for POST requests.
+- `-s` to suppress any additional metadata, it is recommended to use it with `| jq .`.
+- `-sS` to suppress any additional metadata and show errors. It is recommended to use it with `| jq .`.
+
+By default, requested information is beeing send in JSON format. To display it in CLI as a pretty-printed JSON, you can use [jq](https://jqlang.org) tool. The only change that is needed is to add `| jq .` at the end of the command, i.e.: `<command> | jq .`. 
 
 ## PostgreSQL
 Database itself is running on port 5432. You can connect with it using PostgreSQL client or CLI. Credentials are:
@@ -52,7 +57,7 @@ Database itself is running on port 5432. You can connect with it using PostgreSQ
 - ports: 5432:5432
 
 You can use the following command to connect to the database:
-```bash
+```
 psql -h localhost -p 5432 -U postgres -d mydb
 ```
 
