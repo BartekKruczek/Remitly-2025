@@ -1,12 +1,25 @@
 import pytest
 import httpx
 
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from typing import List
+
+from src.model import UserSwiftDB
+
 BASE_URL = "http://localhost:8080"
+DATABASE_URL = "postgresql://postgres:password@db:5432/mydb"
+
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+with SessionLocal() as db:
+    swift_code_list: List[str] = [row[0] for row in db.query(UserSwiftDB.swift_code).all()]
+
 
 @pytest.mark.asyncio
-async def test_get_swift_code_with_branches():
-    # TODO: iterate over entire db, not only one example
-    swift_code = "ALBPPLP1BMW"
+@pytest.mark.parametrize("swift_code", swift_code_list)
+async def test_get_swift_code_with_branches(swift_code):
     async with httpx.AsyncClient() as client:
         response = await client.get(f"{BASE_URL}/v1/swift-codes/{swift_code}")
         assert response.status_code == 200, f"Got {response.status_code}: {response.text}"
