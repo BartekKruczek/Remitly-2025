@@ -74,6 +74,23 @@ async def test_create_swift_code():
         assert get_data["isHeadquarter"] == True
 
 
-# TODO: add POST duplicate test
+@pytest.mark.asyncio
+async def test_create_swift_code_already_exists():
+    existing_swift_code = "AAISALTRXXX" # is in database
+    new_data = {
+        "swift_code": existing_swift_code,
+        "bank_name": "Some Bank",
+        "address": "No matter",
+        "country_iso2": "SB",
+        "country_name": "SomeCountry",
+        "is_headquarter": False
+    }
+    async with httpx.AsyncClient() as client:
+        response = await client.post(f"{BASE_URL}/v1/swift-codes", json=new_data)
+        assert response.status_code == 400
+        data = response.json()
+        assert data["detail"] == "SWIFT code already exists"
 
 # TODO: add DELETE test
+
+# TODO: add DELETE that does not exist
