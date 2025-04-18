@@ -91,6 +91,29 @@ async def test_create_swift_code_already_exists():
         data = response.json()
         assert data["detail"] == "SWIFT code already exists"
 
-# TODO: add DELETE test
+@pytest.mark.asyncio
+async def test_delete_swift_code():
+    new_code = "DELETEME1"
+    new_data = {
+        "swift_code": new_code,
+        "bank_name": "To Be Deleted",
+        "address": "Temp 123",
+        "country_iso2": "XX",
+        "country_name": "XTEST",
+        "is_headquarter": False
+    }
+    async with httpx.AsyncClient() as client:
+        create_resp = await client.post(f"{BASE_URL}/v1/swift-codes", json=new_data)
+        assert create_resp.status_code == 200
+        
+        delete_resp = await client.delete(f"{BASE_URL}/v1/swift-codes/{new_code}")
+        assert delete_resp.status_code == 200
+        delete_data = delete_resp.json()
+        assert f"Data associated with SWIFT code {new_code} deleted successfully." in delete_data["message"]
+
+        get_resp = await client.get(f"{BASE_URL}/v1/swift-codes/{new_code}")
+        assert get_resp.status_code == 404
+        get_data = get_resp.json()
+        assert get_data["detail"] == "SWIFT code not found"
 
 # TODO: add DELETE that does not exist
