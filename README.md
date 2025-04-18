@@ -18,8 +18,8 @@ docker exec -it remitly_api poetry run pytest tests/
 It will call tests within created instance. If everything lights up green, that means endpoints are working and you can try to extract information from the database.
 
 ## How does it work
-TODO: describe how it works, all endpoints, how to use them, etc. Also how containerized app is connected to the database. Maybe
-add some diagrams.
+Long story short, the application is being containerized with docker. It is using FastAPI framework to create endpoints and PostgreSQL database to store information about swift codes. The application is running on port 8080, while the database is running on port 5432. The application is using SQLAlchemy ORM to interact with the database. Below you can see how containeralized application looks like:
+![img1](/imgs/docker/1.png)
 
 ## Implemented endpoints
 There are 4 in total FastAPI endpoints:
