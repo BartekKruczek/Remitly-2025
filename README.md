@@ -10,6 +10,13 @@ docker compose up --build
 It will launch a postgres database and containerized version of the application on ports 5432 and 8080 respectively. Inside
 containerized app, poetry is used to manage dependencies. What is more, they are stored in newly created virtual environment.
 
+## How to run tests
+All tests are being executed by [pytest-asyncio](https://pypi.org/project/pytest-asyncio/) framework. To run them, you have to firstly create docker container (follow steps above). You don't have to install locally dependencies, just execute it with:
+```
+docker exec -it remitly_api poetry run pytest tests/
+```
+It will call tests within created instance. If everything lights up green, that means endpoints are working and you can try to extract information from the database.
+
 ## How does it work
 TODO: describe how it works, all endpoints, how to use them, etc. Also how containerized app is connected to the database. Maybe
 add some diagrams.
@@ -61,13 +68,10 @@ You can use the following command to connect to the database:
 psql -h localhost -p 5432 -U postgres -d mydb
 ```
 
-To verify it's correctness, fell free to display first 10 rows of the table:
+To verify it's correctness, feel free to display first 10 rows of the table:
 ```sql
 SELECT * FROM swift_db LIMIT 10;
 ```
-
-## How to run tests
-TODO: describe how to run tests
 
 ## Clean up
 For the safety reasons, there is no implemented any automatic clean up command. In order to stop the application, and thus the database, user should do it manually. To recreate whole environment/experiments, previously created containers should be removed, which also kills the database.

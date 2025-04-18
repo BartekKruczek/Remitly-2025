@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
@@ -13,5 +13,3 @@ class UserSwiftDB(Base):
     country_iso2 = Column(String, nullable=False)
     country_name = Column(String, nullable=False)
     is_headquarter = Column(Boolean, default=False)
-
-    # TODO: add more fields, maybe auto check if XXX is unique
