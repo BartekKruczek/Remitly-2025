@@ -43,7 +43,9 @@ async def test_get_iso2_code(iso2_code):
         data = response.json()
 
         assert data["countryISO2"] == iso2_code.upper()
-        # TODO: add more assertions
+        assert isinstance(data["countryName"], str)
+        assert isinstance(data["swiftCodes"], list)
+
 
 @pytest.mark.asyncio
 async def test_create_swift_code():
@@ -116,4 +118,11 @@ async def test_delete_swift_code():
         get_data = get_resp.json()
         assert get_data["detail"] == "SWIFT code not found"
 
-# TODO: add DELETE that does not exist
+@pytest.mark.asyncio
+async def test_delete_swift_code_not_found():
+    non_existing_code = "NONEXISTENTCODE" # does not exist in database
+    async with httpx.AsyncClient() as client:
+        response = await client.delete(f"{BASE_URL}/v1/swift-codes/{non_existing_code}")
+        assert response.status_code == 404
+        data = response.json()
+        assert data["detail"] == "SWIFT code not found"

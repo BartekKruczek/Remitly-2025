@@ -13,5 +13,3 @@ class UserSwiftDB(Base):
     country_iso2 = Column(String, nullable=False)
     country_name = Column(String, nullable=False)
     is_headquarter = Column(Boolean, default=False)
-
-    # TODO: add more fields, maybe auto check if XXX is unique

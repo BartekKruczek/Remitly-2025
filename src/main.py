@@ -19,8 +19,6 @@ def startup():
     parse_and_load_xlsx(db, "Interns_2025_SWIFT_CODES.xlsx")
     print("Database connected")
 
-    # TODO : add check if db is empty, if not then load data
-
 @app.get("/v1/swift-codes/{swift_code}")
 def read_swift_code(swift_code: str, db: Session = Depends(yield_db)):
     record = get_unique_swift_code(db, swift_code)
